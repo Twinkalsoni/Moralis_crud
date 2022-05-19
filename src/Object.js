@@ -1,119 +1,81 @@
-import React, { useState } from "react";
-import { useMoralis } from "react-moralis";
-import { useFormik, Form, FormikProvider } from "formik";
-import { useMoralisQuery } from "react-moralis";
+import React, { useState,useEffect } from "react";
+import { useMoralis,useMoralisQuery } from "react-moralis";
 import { Link } from 'react-router-dom';
-
 import Table from 'react-bootstrap/Table';
 
 const Object = () => {
-  const { Moralis, user } = useMoralis();
-  const [loading, setLoading] = useState(false);
-// const[obj,setobj]= useState();
-    const Contact = Moralis.Object.extend("ContactDetail");
-    const contact = new Contact();
-  const formik = useFormik({
-    initialValues: {
-      name: "",
-      email: "",
-      password: "",
+  const { Moralis} = useMoralis();
+  const { data, fetch } = useMoralisQuery("ContactDetail");
 
-    },
-    onSubmit: async (values, { resetForm }) => {
-      const Contacts = {
-        name: values.name,
-        email: values.email,
-        password: values.password,
+  // const [loading, setLoading] = useState(false);
+  //   const Contact = Moralis.Object.extend("ContactDetail");
+  //   const contact = new Contact();
+    const [Pagerefesh, setPageRefresh] = useState(false);
+    useEffect(() => {
+      fetch()
+    }, [Pagerefesh])
+  // const formik = useFormik({
+  //   initialValues: {
+  //     name: "",
+  //     email: "",
+  //     password: "",
 
-      };
-      console.log(Contacts, "Contacts");
-      try {
-        setLoading(true);
-        // contact.set("from", user.attributes.username);
-        contact.set("name", Contacts.name);
-        contact.set("email", Contacts.email);
-        contact.set("password", Contacts.password);
-        await contact.save();
-        setLoading(false);
-      } catch (error) {
-        setLoading(false);
-        // console.log(error);
-        alert(error);
-      }
-      resetForm();
-    },
-  });
-  const { data, error, isLoading } = useMoralisQuery("ContactDetail");
-  if (error) {
-    return <span>🤯</span>;
-  }
-  if (isLoading) {
-    return <span>🙄</span>;
-  }
-  console.log(data);
+  //   },
+  //   onSubmit: async (values, { resetForm }) => {
+  //     const Contacts = {
+  //       name: values.name,
+  //       email: values.email,
+  //       password: values.password,
+
+  //     };
+  //     console.log(Contacts, "Contacts");
+  //     try {
+  //       setLoading(true);
+  //       // contact.set("from", user.attributes.username);
+  //       contact.set("name", Contacts.name);
+  //       contact.set("email", Contacts.email);
+  //       contact.set("password", Contacts.password);
+  //       await contact.save();
+  //       setLoading(false);
+  //     } catch (error) {
+  //       setLoading(false);
+  //       // console.log(error);
+  //       alert(error);
+  //     }
+  //     resetForm();
+  //   },
+  // });
+  // const { data, error, isLoading } = useMoralisQuery("ContactDetail");
+  // if (error) {
+  //   return <span>🤯</span>;
+  // }
+  // if (isLoading) {
+  //   return <span>🙄</span>;
+  // }
+  // console.log(data);
+ 
   let removeData;
   data.map((obj) => {
 
-    removeData = async () => {
+    removeData = async (id) => {
 
       const query = new Moralis.Query('ContactDetail')
-      query.equalTo('objectId', obj.id)
+      query.equalTo('objectId', id)
       const object = await query.first(({ useMasterKey: true }))
-      console.log(JSON.stringify(object))
+      // console.log(JSON.stringify(object))
       if (object) {
         object.destroy().then(() => {
           alert("Deleted data!");
+          setPageRefresh(!Pagerefesh)
         }, (error) => {
           console.log(error);
         })
       } 
     }
   })
- 
- 
   return (
     <>
-      <div>
-        <h6>
-          Contact Detail</h6>
-        <form
-          onSubmit={formik.handleSubmit}
-          style={{
-            // justifyContent: "center",
-            // marginLeft: "12vw",
-            // marginRight: "12vw",
-          }}
-        >
-          <textarea
-            required
-            aria-label="minimum height"
-            placeholder="Enter Your Name"
-            style={{ marginTop: "20px", }}
-            {...formik.getFieldProps("name")}
-          ></textarea>
-          <br />
-
-          <textarea
-            required
-            aria-label="minimum height"
-            placeholder="Enter Your Email"
-            style={{ marginTop: "20px", }}
-            {...formik.getFieldProps("email")}
-          ></textarea>
-          <br />
-
-          <textarea
-            required
-            aria-label="minimum height"
-            placeholder="Enter Your Password"
-            style={{ marginTop: "20px" }}
-            {...formik.getFieldProps("password")}
-          ></textarea>
-          <br />
-          <button type="submit">Submit</button>
-          <br />
-        </form>
-        <div className="jumbotron jumbotron-fluid">
+     <div className="jumbotron jumbotron-fluid">
           <div className="container"><br />
             <h1 className="text-center">Contact Detail</h1>
           </div><br />
@@ -142,7 +104,6 @@ const Object = () => {
                           <button className="btn btn-success" >Edit</button>
                           </Link>
                           <button className="btn btn-danger" onClick={() => { removeData(obj.id) }} >Delete</button>
-
                         </td>
                       </tr>
                     )
@@ -152,7 +113,6 @@ const Object = () => {
             </div>
           </div>
         </div>
-      </div>
     </>
   );
 };

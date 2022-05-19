@@ -1,16 +1,17 @@
 import './App.css';
 import Object from './Object';
 import AddEdit from './AddEdit';
-import {BrowserRouter as Router,Route,Routes}from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 function App() {
   return (
     <div className="App">
-     <Object/>
+      <Routes>
+      {/* <Route path="Object/*" element={<Object/>}/> */}
 
-  <Routes>
-<Route path='/update/:id' element={<AddEdit/>}​ />
-</Routes>
-    
+        <Route path="/add" element={<AddEdit/>}/>
+        <Route path="/update/:id" element={<AddEdit />}/>
+      </Routes>
+      <Object />
     </div>
   );
 }
