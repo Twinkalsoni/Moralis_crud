@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 const AddEdit = () => { 
   const { Moralis } = useMoralis();
   const { data,fetch } = useMoralisQuery("ContactDetail")
-  const [Automaticrefesh, setAutomaticrefresh] = useState(false);
+  const [Pagerefesh, setpagerefresh] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const Contact = Moralis.Object.extend("ContactDetail");
@@ -41,7 +41,7 @@ const AddEdit = () => {
     }
     Editdata()
     fetch();
-  },[],[Automaticrefesh])
+  },[],[Pagerefesh])
   
   const formik = useFormik({
 
@@ -82,20 +82,13 @@ const AddEdit = () => {
       } 
       catch (error) {
         setLoading(false);
-        setAutomaticrefresh(!Automaticrefesh)
+        setpagerefresh(!Pagerefesh)
         alert(error);
       }
       resetForm();
     },
   });
-  // const { data, error, isLoading } = useMoralisQuery("ContactDetail");
-  // if (error) {
-  //   return <span>🤯</span>;
-  // }
-  // if (isLoading) {
-  //   return <span>🙄</span>;
-  // }
-  // console.log(data);
+ 
   return (
     <div>
       <div>

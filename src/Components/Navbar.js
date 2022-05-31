@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom';
-
 import { Button } from "bootstrap";
 import './Header.css'
 const Navbar = () => {
-    const [activeTab, setActiveTab] = useState('Object');
+    const [activeTab, setActiveTab] = useState('ContactList');
     const location = useLocation();
     useEffect(() => {
         if (location.pathname === "/") {
-            setActiveTab("Object");
+            setActiveTab("ContactList");
         } else if (location.pathname === "/add") {
             setActiveTab("AddContact");
 
@@ -17,9 +16,9 @@ const Navbar = () => {
     return (
         <>
     <div className='header'>Contacts
-    <Link to='/object'>
-<p className={`${activeTab === "Object"? "active" : ""}`}
-onClick={ () => setActiveTab("Object")}> Home</p>
+    <Link to='/contactlist'>
+<p className={`${activeTab === "ContactList"? "active" : ""}`}
+onClick={ () => setActiveTab("ContactList")}> Home</p>
 </Link>
 
 <Link to='/add'>
