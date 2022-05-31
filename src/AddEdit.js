@@ -1,20 +1,25 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
 import { useMoralis,useMoralisQuery } from "react-moralis";
   import { useFormik } from 'formik';
 import { useParams } from 'react-router-dom';
 const AddEdit = () => { 
-
   const { Moralis } = useMoralis();
   const { data,fetch } = useMoralisQuery("ContactDetail")
+  const [Automaticrefesh, setAutomaticrefresh] = useState(false);
+
   const [loading, setLoading] = useState(false);
   const Contact = Moralis.Object.extend("ContactDetail");
   const contact = new Contact();
   const { id } = useParams()
+  // function refresh(){
+  //   window.location.reload(false);
+  // }
   useEffect(() => {
    
     const Editdata = async () => {
       const ContactDetail = Moralis.Object.extend("ContactDetail");
       const query = new Moralis.Query(ContactDetail);
+
       query.equalTo('objectId', id);
 
       const object = await query.first();
@@ -34,29 +39,27 @@ const AddEdit = () => {
         })
       }
     }
-    
     Editdata()
-    
-  },[])
+    fetch();
+  },[],[Automaticrefesh])
+  
   const formik = useFormik({
 
     initialValues: {
       name: "",
       email: "",
       password: "",
-
     },
     onSubmit: async (values, { resetForm }) => {
       const formData = {
         name: values.name,
         email: values.email,
         password: values.password
-
       };
       console.log(formData, "formData");
+      resetForm();
       try {
         setLoading(true);
-
         if (id) {
           const ContactDetail = Moralis.Object.extend("ContactDetail");
           const query = new Moralis.Query(ContactDetail);
@@ -72,17 +75,15 @@ const AddEdit = () => {
           contact.set("name", formData.name);
           contact.set("email", formData.email);
           contact.set("password", formData.password);
-          
+
           contact.save();
         }
-
         setLoading(false);
-
       } 
       catch (error) {
         setLoading(false);
+        setAutomaticrefresh(!Automaticrefesh)
         alert(error);
-
       }
       resetForm();
     },
@@ -106,7 +107,7 @@ const AddEdit = () => {
             justifyContent: "center",
             marginLeft: "12vw",
             marginRight: "12vw",
-          }} >
+          }}>
           <textarea
             required
             aria-label="minimum height"

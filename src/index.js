@@ -9,7 +9,9 @@ import {BrowserRouter as Router,Route,Routes}from 'react-router-dom';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
 root.render(
+
   <MoralisProvider appId='s90MzvJYYwPUMYCj04z6UH7IuizUSH6SU9u8ZB8G' serverUrl='https://etpho6eqimtw.usemoralis.com:2053/server'>
   <React.StrictMode>
     <Router>

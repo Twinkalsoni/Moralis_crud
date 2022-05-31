@@ -1,0 +1,19 @@
+.header{
+    background-color: antiquewhite;
+    margin: 0px;
+    padding: 0px;
+    height: 60px;
+}
+.header p{
+    float: right;
+    /* text-align: center; */
+    text-decoration: none;
+    color: black;
+    padding: 10px;
+}
+
+.header p:hover{
+    background-color: #D41256;
+    color:#fff ;
+    border-radius: 8px;
+}

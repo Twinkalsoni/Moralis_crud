@@ -2,9 +2,12 @@ import './App.css';
 import Object from './Object';
 import AddEdit from './AddEdit';
 import { Route, Routes } from 'react-router-dom';
+// import { Navbar } from 'react-bootstrap';
+import Navbar from './Navbar';
 function App() {
   return (
     <div className="App">
+      <Navbar/>
       <Routes>
       {/* <Route path="Object/*" element={<Object/>}/> */}
 
